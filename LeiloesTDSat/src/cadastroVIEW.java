@@ -171,9 +171,12 @@ public class cadastroVIEW extends javax.swing.JFrame {
         
         cadastroNome.setText("");
         cadastroValor.setText("");
+        
+        c.desconectar();
     }//GEN-LAST:event_btnCadastrarActionPerformed
 
     private void btnProdutosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProdutosActionPerformed
+        this.dispose();
         listagemVIEW listagem = new listagemVIEW(); 
         listagem.setVisible(true);
     }//GEN-LAST:event_btnProdutosActionPerformed
@@ -226,26 +229,32 @@ public class cadastroVIEW extends javax.swing.JFrame {
     private javax.swing.JSeparator jSeparator2;
     // End of variables declaration//GEN-END:variables
 
-private boolean ValidacaoDados() {
-     
+    private boolean ValidacaoDados() {
+
         try {
             if (cadastroNome.getText().isEmpty() || cadastroValor.getText().isEmpty()) {
-                JOptionPane.showMessageDialog(null, "⚠ Preencha todos os campos.","Erro", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "⚠ Preencha todos os campos.", "Erro", JOptionPane.ERROR_MESSAGE);
                 return false;
             }
-            
-          String valorTexto = cadastroValor.getText().trim();
-            
+
+            String valorTexto = cadastroValor.getText().trim();
+
+            if (!valorTexto.matches("\\d+")) {  // Valida que o valor contém apenas dígitos
+                JOptionPane.showMessageDialog(null, "⚠ O campo Valor deve conter apenas números.", "Erro", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+
+            int valor = Integer.parseInt(valorTexto);
+
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(null, "⚠ O campo Valor deve conter apenas números.", "Erro", JOptionPane.ERROR_MESSAGE);
-            return false;}
-
-         catch (Exception e) {
+            return false;
+        } catch (Exception e) {
             javax.swing.JOptionPane.showMessageDialog(this, "Ocorreu um erro: " + e.getMessage(), "Erro", javax.swing.JOptionPane.ERROR_MESSAGE);
             return false;
         }
         return true;
- }
+    }
 }
     
  

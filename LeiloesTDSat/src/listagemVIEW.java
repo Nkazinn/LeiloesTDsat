@@ -1,6 +1,9 @@
 
 import java.util.ArrayList;
+import java.util.List;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
@@ -13,9 +16,8 @@ import javax.swing.table.DefaultTableModel;
  */
 public class listagemVIEW extends javax.swing.JFrame {
 
-    /**
-     * Creates new form listagemVIEW
-     */
+     ProdutosDTO produto;
+    
     public listagemVIEW() {
         initComponents();
         listarProdutos();
@@ -136,12 +138,7 @@ public class listagemVIEW extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnVenderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVenderActionPerformed
-        String id = id_produto_venda.getText();
         
-        ProdutosDAO produtosdao = new ProdutosDAO();
-        
-        //produtosdao.venderProduto(Integer.parseInt(id));
-        listarProdutos();
     }//GEN-LAST:event_btnVenderActionPerformed
 
     private void btnVendasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVendasActionPerformed
@@ -151,6 +148,8 @@ public class listagemVIEW extends javax.swing.JFrame {
 
     private void btnVoltarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVoltarActionPerformed
         this.dispose();
+        cadastroVIEW cadastro = new cadastroVIEW();
+        cadastro.setVisible(true);
     }//GEN-LAST:event_btnVoltarActionPerformed
 
     /**
@@ -203,6 +202,7 @@ public class listagemVIEW extends javax.swing.JFrame {
 
     private void listarProdutos(){
         try {
+            
             ProdutosDAO produtosdao = new ProdutosDAO();
             
             DefaultTableModel model = (DefaultTableModel) listaProdutos.getModel();
@@ -222,4 +222,24 @@ public class listagemVIEW extends javax.swing.JFrame {
         }
     
     }
+    
+    private boolean ValidacaoDados() {
+     
+        try {
+            if (id_produto_venda.getText().isEmpty()) {
+                JOptionPane.showMessageDialog(null, "⚠ Preencha todos os campos.","Erro", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+            
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(null, "⚠ O campo id deve conter apenas números.", "Erro", JOptionPane.ERROR_MESSAGE);
+            return false;}
+
+         catch (Exception e) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Ocorreu um erro: " + e.getMessage(), "Erro", javax.swing.JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        return true;
+ }
+    
 }
