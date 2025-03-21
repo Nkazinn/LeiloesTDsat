@@ -1,3 +1,7 @@
+
+import com.mysql.jdbc.Connection;
+import javax.swing.JOptionPane;
+
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
@@ -140,17 +144,33 @@ public class cadastroVIEW extends javax.swing.JFrame {
     }//GEN-LAST:event_cadastroNomeActionPerformed
 
     private void btnCadastrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCadastrarActionPerformed
+        
+        if(!ValidacaoDados()){
+            return ;
+        }
+        
+        Conexao c = new Conexao();
         ProdutosDTO produto = new ProdutosDTO();
+        java.sql.Connection st = c.conectar();
+        
+        if (st == null) {
+            JOptionPane.showMessageDialog(null, "Erro de conexão");
+        } 
+        
         String nome = cadastroNome.getText();
-        String valor = cadastroValor.getText();
+        String valor = cadastroValor.getText().replaceAll(" ", "");;
         String status = "A Venda";
+        
         produto.setNome(nome);
         produto.setValor(Integer.parseInt(valor));
         produto.setStatus(status);
         
         ProdutosDAO produtodao = new ProdutosDAO();
         produtodao.cadastrarProduto(produto);
+        JOptionPane.showMessageDialog(null,"✅ Produto cadastrado com sucesso!", "Sucesso",JOptionPane.INFORMATION_MESSAGE);
         
+        cadastroNome.setText("");
+        cadastroValor.setText("");
     }//GEN-LAST:event_btnCadastrarActionPerformed
 
     private void btnProdutosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProdutosActionPerformed
@@ -205,4 +225,28 @@ public class cadastroVIEW extends javax.swing.JFrame {
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
     // End of variables declaration//GEN-END:variables
+
+private boolean ValidacaoDados() {
+     
+        try {
+            if (cadastroNome.getText().isEmpty() || cadastroValor.getText().isEmpty()) {
+                JOptionPane.showMessageDialog(null, "⚠ Preencha todos os campos.","Erro", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+            
+          String valorTexto = cadastroValor.getText().trim();
+            
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(null, "⚠ O campo Valor deve conter apenas números.", "Erro", JOptionPane.ERROR_MESSAGE);
+            return false;}
+
+         catch (Exception e) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Ocorreu um erro: " + e.getMessage(), "Erro", javax.swing.JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        return true;
+ }
 }
+    
+ 
+
