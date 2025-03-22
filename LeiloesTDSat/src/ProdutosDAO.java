@@ -73,4 +73,42 @@ public class ProdutosDAO {
         }
         return listagem;
     }
+    
+    
+    public int venderProduto(int id) {
+        int status;
+        String sql = "UPDATE produtos SET status = ? WHERE id = ?";
+        try {
+            st = con.prepareStatement(sql);
+            st.setString(1, "Vendido");
+            st.setInt(2, id);
+            status = st.executeUpdate();
+
+            st.close();
+            return status;
+        } catch (SQLException ex) {
+            System.out.println("Erro ao buscar produtos: " + ex.getMessage());
+            return ex.getErrorCode();
+        }
+    }
+    
+    public ProdutosDTO buscarProdutoPorId(int id) {
+    ProdutosDTO produto = null;
+    String sql = "SELECT * FROM produtos WHERE id = ?";
+    try (PreparedStatement st = con.prepareStatement(sql)) {
+        st.setInt(1, id);
+        ResultSet rs = st.executeQuery();
+
+        if (rs.next()) {
+            produto = new ProdutosDTO();
+            produto.setId(rs.getInt("id"));
+            produto.setNome(rs.getString("nome"));
+            produto.setValor(rs.getInt("valor"));
+            produto.setStatus(rs.getString("status"));
+        }
+    } catch (SQLException e) {
+        System.out.println("Erro ao buscar produto: " + e.getMessage());
+    }
+    return produto;
+  }
 }

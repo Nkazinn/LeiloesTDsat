@@ -43,7 +43,7 @@ public class listagemVIEW extends javax.swing.JFrame {
         btnVendas = new javax.swing.JButton();
         btnVoltar = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         listaProdutos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -135,10 +135,42 @@ public class listagemVIEW extends javax.swing.JFrame {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnVenderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVenderActionPerformed
+        if(!ValidacaoDados()){
+            return ;
+        }
         
+        ProdutosDAO p = new ProdutosDAO();
+        Conexao c = new Conexao();
+        java.sql.Connection st = c.conectar();
+        
+        if (st == null) {
+            JOptionPane.showMessageDialog(null, "Erro de conexão");
+        }
+    
+        String id = id_produto_venda.getText();
+        
+        produto = p.buscarProdutoPorId(Integer.parseInt(id));
+        
+        if (produto == null) {
+        JOptionPane.showMessageDialog(null, "⚠ Produto não encontrado!", "Erro", JOptionPane.ERROR_MESSAGE);
+        return;
+    }
+        if (produto.getStatus().equals("Vendido")) {
+        JOptionPane.showMessageDialog(null, "⚠ Esse produto já foi vendido.", "Erro", JOptionPane.ERROR_MESSAGE);
+        return;
+    }
+        
+        p.venderProduto(Integer.parseInt(id));
+        listarProdutos();
+        
+        JOptionPane.showMessageDialog(null,"✅ Produto vendido com sucesso!", "Sucesso",JOptionPane.INFORMATION_MESSAGE);
+        id_produto_venda.setText("");
+        
+        c.desconectar();
     }//GEN-LAST:event_btnVenderActionPerformed
 
     private void btnVendasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVendasActionPerformed
